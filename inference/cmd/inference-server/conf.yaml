@@ -1,0 +1,30 @@
+version: v0.1
+ginConf:
+  serverName: inference
+  serverAddr: :8080
+  ginMode: debug
+  auth:
+    authServerAddr: https://kubebrain.brainpp.cn
+    debug: true
+mgoConf:
+  mongoURL: mongodb://localhost:27017
+  mongoDBName: inferenceDB
+  connectionTimeout: 10 # seconds
+  singleClientMode: false
+# oss
+injectOSSConf: true
+ossEndpoint: localhost:9999
+ossAccessKey: ossaccesskey
+ossSecretKey: osssecretkey
+# serving
+kfServingResyncSeconds: 2
+# kubeconf
+localDebug: true
+localKubeConfigPath: "/Users/zhenggeng/.kube/config"
+quotaGroupConf:
+  gateway: https://quota-manager-webserver.kubebrain.svc:6443
+  apiPath: ""
+  accessKey: ""
+  secretKey: ""
+solutionHub: "http://solutionhub-http.aiservice.svc:8080"
+

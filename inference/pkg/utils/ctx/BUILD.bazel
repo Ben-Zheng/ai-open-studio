@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["response.go"],
+    importpath = "go.megvii-inc.com/brain/brainpp/projects/aiservice/inference/pkg/utils/ctx",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//projects/aiservice/inference/pkg/utils/ctx/errors:go_default_library",
+        "//projects/aiservice/pkg/sentry:go_default_library",
+        "@com_github_gin_gonic_gin//:go_default_library",
+    ],
+)
+
+filegroup(
+    name = "package-srcs",
+    srcs = glob(["**"]),
+    tags = ["automanaged"],
+    visibility = ["//visibility:private"],
+)
+
+filegroup(
+    name = "all-srcs",
+    srcs = [
+        ":package-srcs",
+        "//projects/aiservice/inference/pkg/utils/ctx/errors:all-srcs",
+    ],
+    tags = ["automanaged"],
+    visibility = ["//visibility:public"],
+)

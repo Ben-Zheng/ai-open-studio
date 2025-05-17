@@ -1,0 +1,545 @@
+openapi: 3.0.0
+info:
+  title: Inference Service API
+  description: apis for AIS inference service
+  version: 1.0.0
+  
+tags:
+  - name: inference-meta
+    description: inference metadata管理
+
+
+servers:
+  - url: https://kubebrain.brainpp.cn/kapi/inference.kubebrain.io
+    description: 测试服务器
+  - url: http://prod.server.cn/kapi
+    description: fake服务器
+
+
+paths:
+  /v1/inferences:
+    get:
+      tags:
+        - "inference-meta"
+      summary: 获得推理服务的列表信息
+      description: 获取推理服务的列表信息
+      parameters: 
+        - name: page
+          in: query
+          description: 当前页数，从1开始，默认为1
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: pageSize
+          in: query
+          description: 每页的数据条数
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: sortBy
+          in: query
+          description: 排序字段，默认为createAt
+          required: false
+          schema:
+            type: string
+        - name: order
+          in: query
+          description: 排序方式，默认为desc
+          required: false
+          schema:
+            type: string
+        - name: x-kb-project
+          in: header
+          description: 项目名称。默认为default
+          required: false
+          schema:
+            type: string
+        - name: projectName
+          in: query
+          description: 项目名称，与在Header中的x-kb-project相同功能
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/InferenceService'
+        '400':
+          description: bad request
+        '401':
+          description: unauthorized
+        '501':
+          description: internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+    post:
+      tags:
+        - "inference-meta"
+      summary: 创建推理服务
+      description: 创建推理服务
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InferenceService'
+              # name is required
+              # revisions is required
+              # ServiceInstances should be two if canary enabled
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  inferenceServiceID:
+                    type: string
+                    description: 推理服务的ID
+        '400':
+          description: bad request
+        '401':
+          description: unauthorized
+        '501':
+          description: internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+  /v1/inferences/{inferenceServiceID}:
+    get:
+      tags:
+        - "inference-meta"
+      summary: 推理服务详情
+      description: 获取推理服务详情
+      parameters: 
+        - name: inferenceServiceID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: x-kb-project
+          in: header
+          description: 项目名称。默认为default
+          required: false
+          schema:
+            type: string
+        - name: projectName
+          in: query
+          description: 项目名称，与在Header中的x-kb-project相同功能
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: '获取成功'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InferenceService'
+        '400':
+          description: bad request
+        '401':
+          description: unauthorized
+        '501':
+          description: internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+    put:
+      tags:
+        - inference-meta
+      summary: 更新推理服务
+      description: 更新推理服务信息，并重新部署推理服务
+      parameters:
+        - name: inferenceServiceID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: x-kb-project
+          in: header
+          description: 项目名称。默认为default
+          required: false
+          schema:
+            type: string
+        - name: projectName
+          in: query
+          description: 项目名称，与在Header中的x-kb-project相同功能
+          required: false
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InferenceService'
+      responses:
+        '200':
+          description: '更新成功'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  inferenceServiceID:
+                    type: string
+                    description: 推理服务的ID
+        '400':
+          description: bad request
+        '401':
+          description: unauthorized
+        '501':
+          description: internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+    delete:
+      tags:
+        - "inference-meta"
+      summary: 删除推理服务
+      description: 删除推理服务
+      parameters: 
+        - name: inferenceServiceID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: x-kb-project
+          in: header
+          description: 项目名称。默认为default
+          required: false
+          schema:
+            type: string
+        - name: projectName
+          in: query
+          description: 项目名称，与在Header中的x-kb-project相同功能
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: '删除成功'
+        '400':
+          description: bad request
+        '401':
+          description: unauthorized
+        '501':
+          description: internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+  /v1/inferences/{inferenceServiceID}/versions:
+    get:
+      tags:
+        - "inference-meta"
+      summary: 获取推理服务的历史信息
+      description: 获取推理服务的历史信息
+      parameters: 
+        - name: inferenceServiceID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: x-kb-project
+          in: header
+          description: 项目名称。默认为default
+          required: false
+          schema:
+            type: string
+        - name: projectName
+          in: query
+          description: 项目名称，与在Header中的x-kb-project相同功能
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 获取成功
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InferenceService'
+        '400':
+          description: bad request
+        '401':
+          description: unauthorized
+        '501':
+          description: internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorMessage'
+  /v1/inferences/{inferenceServiceID}/apis/{instanceID}/{apiURL}:
+    get:
+      tags:
+        - "inference-api"
+      summary: 推理服务调用API (支持 GET/POST/OPTIONS)
+      description: 推理服务调用API
+      responses:
+        200:
+          description: success
+      parameters:
+        - name: inferenceServiceID
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: instanceID
+          in: path
+          required: true
+          schema:
+            type: string
+            description: "0: 表示调用ServiceURL, 1或者2: 表示调用第1或者2个InstanceURL"
+        - name: apiURL
+          in: path
+          required: true
+          schema:
+            type: string
+            description: "1) 先通过 /apis 获取推理服务调用的 API 列表，2) 后续根据列表进行调用"
+components:
+  schemas:
+    InferenceService:
+      properties:
+        ID:
+          type: string
+          description: 推理服务的ID
+          example: aabbccdd
+        projectID:
+          type: string
+          description: 推理服务服务的project
+          example: brain-test
+        name:
+          type: string
+          description: 推理服务的名字
+          example: irisService
+        description:
+          type: string
+          description: 推理服务的描述
+          example: I'm groot
+        tags:
+          type: array
+          items:
+            type: string
+          description: 标签
+          example: ['tag1', 'tag2']
+        serviceURI:
+          type: string
+          description: 服务地址
+          example: http://example.com/iris
+        createdBy:
+          type: string
+          description: 创建人
+          example: kid90
+        createdAt:
+          type: integer
+          description: 创建时间戳
+          example: 1597820720
+        updatedAt:
+          type: integer
+          description: 更新时间戳
+          example: 1597820720
+        updatedBy:
+          type: string
+          description: 更新人
+          example: ghq
+        revisionCount:
+          type: integer
+          description: 版本数
+          example: 3
+        revisions:
+          type: array
+          items:
+            $ref: '#/components/schemas/InferenceServiceRevision'
+    InferenceServiceRevision:
+      properties:
+        revision:
+          type: string
+          example: v11
+          description: 版本号
+        parentRevision:
+          type: string
+          example: v10
+          description: 父版本号
+        canary:
+          type: boolean
+          example: true
+          description: 是否为金丝雀部署
+        active:
+          type: boolean
+          example: true
+          description: 是否为活跃的服务版本，原则上只有最新版本是活跃的
+        ready:
+          type: boolean
+          description: 推理服务实例的是否就绪
+        notReadyReason:
+          type: string
+          enum: ["Unknown", "Starting", "Failed"]
+          description: 当 ready 为 False 的时候 notReadyReason 会给出错误原因
+        serviceInstances:
+          type: array
+          items:
+            $ref: '#/components/schemas/InferenceInstance'
+          description: 推理服务实例信息
+        createdAt:
+          type: integer
+          description: 创建时间
+          example: 1597820720
+        createdBy:
+          type: string
+          description: 创建人
+          example: kid90
+        quotaConfig:
+          $ref: '#/components/schemas/QuotaConfig'
+    InferenceInstance:
+      properties:
+        ID:
+          description: instanceID
+          type: string
+        meta:
+          $ref: '#/components/schemas/InferenceInstanceMeta'
+        spec:
+          $ref: '#/components/schemas/InferenceInstanceSpec'
+        status:
+          $ref: '#/components/schemas/InferenceInstanceStatus'
+    InferenceInstanceMeta:
+      properties:
+        from:
+          type: string
+          description: 服务来源，当前支持通过默认镜像加载模型或自定义镜像，提供推理服务"
+          enum: [Model, Image]
+        imageURI:
+          type: string
+          description: 镜像地址（from为image时提供）
+          example: docker-registry.i.brainpp.cn/iris
+        modelID:
+          type: string
+          description: 模型ID
+          example: 23dajlfj23d3d
+        modelRevision:
+          type: string
+          description: 模型版本号
+          example: 语义化的版本号，比如 "v1"
+        modelAppType:
+          type: string
+          description: 模型的应用场景，内容来源于 ModelHub
+          enum: ["Classification", "Detection"]
+        modelFramework:
+          type: string
+          description: 模型的框架类型，内容来源于 ModelHub
+          enum: ["MegEngine", "TensorFlow", "PyTorch"]
+        modelURI:
+          type: string
+          description: 模型的oss地址
+          example: s3://model/model.zip
+        entryPoint:
+          type: array
+          items:
+            type: string
+          description: entrypoint配置
+          example: [bash, -c, '/bin/echo test']
+        env:
+          type: array
+          items:
+            $ref: '#/components/schemas/RuntimeEnv'
+    InferenceInstanceSpec:
+      properties:
+        minReplicas:
+          type: integer
+          description: 最小副本数
+          example: 1
+        maxReplicas:
+          type: integer
+          description: 最大副本数
+          example: 10
+        concurrent:
+          type: integer
+          description: 最大并发数
+          example: 10
+        trafficPercent:
+          type: integer
+          description: 流量百分比(%)
+        resource:
+          type: object
+          description: 资源配置
+          properties:
+            cpu:
+              type: integer
+              example: 10
+            memory:
+              type: integer
+              description: 单位 GiB
+              example: 10
+            gpu:
+              type: integer
+              example: 1
+    InferenceInstanceStatus:
+      type: object
+      properties:
+        ready:
+          type: boolean
+          description: 推理服务实例的是否就绪
+        notReadyReason:
+          type: string
+          enum: ["Unknown", "Starting", "Failed"]
+          description: 当 ready 为 False 的时候 notReadyReason 会给出错误原因
+        instanceURI:
+          type: string
+          description: 推理服务实例的暴露地址
+          example: www.example.com/iris-default-predictor
+        pods:
+          type: array
+          items:
+            type: string
+            description: Pod实例的名字
+        updatedAt:
+          type: integer
+          description: 更新时间的时间戳
+          example: 597820720
+    RuntimeEnv:
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+    QuotaConfig:
+      properties:
+        quotaGroup:
+          type: string
+          description: 配额组名字
+        bestEffort:
+          type: string
+          enum:
+            - yes
+            - no
+        preemptible:
+          type: string
+          description: 是否抢占空闲资源，可能被清理
+          enum:
+            - yes
+            - no
+    ErrorMessage:
+      properties:
+        code:
+          type: string
+        msg:
+          type: string
