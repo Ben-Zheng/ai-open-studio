@@ -1,0 +1,41 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "comparison.go",
+        "evaluation.go",
+        "export.go",
+    ],
+    importpath = "go.megvii-inc.com/brain/brainpp/projects/aiservice/autolearn/pkg/autolearn-server/mgr/controller/evaluation",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//projects/aiservice/autolearn/pkg/autolearn-server/config:go_default_library",
+        "//projects/aiservice/autolearn/pkg/autolearn-server/ctx/errors:go_default_library",
+        "//projects/aiservice/autolearn/pkg/autolearn-server/mgr/controller/autolearn:go_default_library",
+        "//projects/aiservice/autolearn/pkg/autolearn-server/mgr/dao:go_default_library",
+        "//projects/aiservice/autolearn/pkg/autolearn-server/outer-client:go_default_library",
+        "//projects/aiservice/autolearn/pkg/autolearn-server/types:go_default_library",
+        "//projects/aiservice/evalhub/pkg/types:go_default_library",
+        "//projects/aiservice/pkg/ginlib:go_default_library",
+        "//projects/aiservice/pkg/mgolib:go_default_library",
+        "//projects/aiservice/pkg/types:go_default_library",
+        "//projects/aiservice/pkg/utils:go_default_library",
+        "@com_github_sirupsen_logrus//:go_default_library",
+        "@org_mongodb_go_mongo_driver//bson/primitive:go_default_library",
+    ],
+)
+
+filegroup(
+    name = "package-srcs",
+    srcs = glob(["**"]),
+    tags = ["automanaged"],
+    visibility = ["//visibility:private"],
+)
+
+filegroup(
+    name = "all-srcs",
+    srcs = [":package-srcs"],
+    tags = ["automanaged"],
+    visibility = ["//visibility:public"],
+)

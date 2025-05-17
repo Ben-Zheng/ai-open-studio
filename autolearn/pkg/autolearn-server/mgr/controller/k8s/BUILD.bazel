@@ -1,0 +1,38 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["autolearn.go"],
+    importpath = "go.megvii-inc.com/brain/brainpp/projects/aiservice/autolearn/pkg/autolearn-server/mgr/controller/k8s",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//projects/aiservice/autolearn/pkg/autolearn-server/config:go_default_library",
+        "//projects/aiservice/autolearn/pkg/autolearn-server/types:go_default_library",
+        "//projects/aiservice/autolearn/pkg/utils:go_default_library",
+        "//projects/aiservice/pkg/features:go_default_library",
+        "//projects/aiservice/pkg/types:go_default_library",
+        "//projects/aiservice/publicservice/pkg/types:go_default_library",
+        "//projects/kubebrain/pkg/apis/gang/v1alpha1:go_default_library",
+        "//projects/kubebrain/pkg/client/clientset/versioned/typed/gang/v1alpha1:go_default_library",
+        "@com_github_sirupsen_logrus//:go_default_library",
+        "@io_k8s_api//core/v1:go_default_library",
+        "@io_k8s_apimachinery//pkg/api/errors:go_default_library",
+        "@io_k8s_apimachinery//pkg/api/resource:go_default_library",
+        "@io_k8s_apimachinery//pkg/apis/meta/v1:go_default_library",
+        "@io_k8s_client_go//kubernetes:go_default_library",
+    ],
+)
+
+filegroup(
+    name = "package-srcs",
+    srcs = glob(["**"]),
+    tags = ["automanaged"],
+    visibility = ["//visibility:private"],
+)
+
+filegroup(
+    name = "all-srcs",
+    srcs = [":package-srcs"],
+    tags = ["automanaged"],
+    visibility = ["//visibility:public"],
+)

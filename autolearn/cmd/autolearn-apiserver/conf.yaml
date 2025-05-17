@@ -1,0 +1,60 @@
+version: v0.1
+ginConf:
+  serverName: autolearn-apiserver
+  serverAddr: localhost:8081
+  ginMode: debug
+  auth:
+    authServerAddr: http://auth-server.kubebrain
+    debug: true
+mgoConf:
+  mongoURL: mongodb://localhost:27017
+  mongoDBName: autolearn
+  singleClientMode: false
+ossConf:
+  endpoint: http://localhost:9999
+  accessKey: minioadmin
+  secretKey: minioadmin
+ossProxyConf:
+  endpoint: "http://oss-internal.i.brainpp.cn"
+  accessKey: "accessKey"
+  secretKey: "secretKey"
+aisEndpoint:
+  dataHub: datahub:8080
+  evalHub: evalHub:8080
+aisAccessToken:
+  accessKey: ""
+  secretKey: ""
+detEvalCodebase:
+  codeID: "22002"
+  codeName: "aiscodebase-detectioneval-sds"
+  imageURI: "docker-registry.i.brainpp.cn/brain/aiscodebase-detectioneval-sds:v0.0.1-alpha-2"
+  revision: "v0.0.1-alpha-1"
+  frameworkName: "MegEngine"
+  frameworkVersion: "v0.6.0"
+  cpuPerJob: 8
+  gpuPerJob: 0
+  memoryPerJob: 64
+clfEvalCodebase:
+  codeID: "22003"
+  codeName: "aiscodebase-detectioneval-sds"
+  cpuPerJob: 8
+  gpuPerJob: 0
+  memoryPerJob: 64
+noriServer:
+  controllerAddr: "nori-controller-db:8080"
+  locateAddr: "nori-controller-db:8080"
+  ossProxyAddr: "nori-controller-db:8080"
+  stateQueryInterval: 5 # 单位s
+  stateQueryMaxRetry: 180
+snapdetMode:
+  Basic:
+    workerNum: 2
+    gpuPerWorker: 1
+    timeLimit: 3.4444
+  Standard:
+    workerNum: 4
+    gpuPerWorker: 5
+    timeLimit: 4
+dependentImage:
+  snapdet: "snapdet:latest"
+  snapclf: "snapclf:latest"

@@ -1,0 +1,38 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "common.go",
+        "constant.go",
+        "metriclog.go",
+        "request.go",
+        "ticker_wrapper.go",
+        "zip.go",
+    ],
+    importpath = "go.megvii-inc.com/brain/brainpp/projects/aiservice/autolearn/pkg/utils",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//projects/aiservice/autolearn/pkg/autolearn-server/config:go_default_library",
+        "//projects/aiservice/autolearn/pkg/autolearn-server/ctx/errors:go_default_library",
+        "//projects/aiservice/pkg/features:go_default_library",
+        "//projects/aiservice/pkg/oss:go_default_library",
+        "//projects/aiservice/pkg/types:go_default_library",
+        "//projects/aiservice/pkg/utils/fluentbit:go_default_library",
+        "@com_github_sirupsen_logrus//:go_default_library",
+    ],
+)
+
+filegroup(
+    name = "package-srcs",
+    srcs = glob(["**"]),
+    tags = ["automanaged"],
+    visibility = ["//visibility:private"],
+)
+
+filegroup(
+    name = "all-srcs",
+    srcs = [":package-srcs"],
+    tags = ["automanaged"],
+    visibility = ["//visibility:public"],
+)

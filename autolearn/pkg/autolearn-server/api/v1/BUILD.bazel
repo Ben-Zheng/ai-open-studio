@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["route.go"],
+    importpath = "go.megvii-inc.com/brain/brainpp/projects/aiservice/autolearn/pkg/autolearn-server/api/v1",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//projects/aiservice/autolearn/pkg/autolearn-server/mgr/hdlr:go_default_library",
+        "//projects/aiservice/pkg/ginlib:go_default_library",
+    ],
+)
+
+filegroup(
+    name = "package-srcs",
+    srcs = glob(["**"]),
+    tags = ["automanaged"],
+    visibility = ["//visibility:private"],
+)
+
+filegroup(
+    name = "all-srcs",
+    srcs = [
+        ":package-srcs",
+        "//projects/aiservice/autolearn/pkg/autolearn-server/api/v1/client:all-srcs",
+    ],
+    tags = ["automanaged"],
+    visibility = ["//visibility:public"],
+)
