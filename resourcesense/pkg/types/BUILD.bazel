@@ -1,0 +1,36 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "gpu.go",
+        "types.go",
+    ],
+    importpath = "go.megvii-inc.com/brain/brainpp/projects/aiservice/resourcesense/pkg/types",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//projects/aiservice/pkg/types:go_default_library",
+        "@io_k8s_api//core/v1:go_default_library",
+    ],
+)
+
+filegroup(
+    name = "package-srcs",
+    srcs = glob(["**"]),
+    tags = ["automanaged"],
+    visibility = ["//visibility:private"],
+)
+
+filegroup(
+    name = "all-srcs",
+    srcs = [
+        ":package-srcs",
+        "//projects/aiservice/resourcesense/pkg/types/algoresource:all-srcs",
+        "//projects/aiservice/resourcesense/pkg/types/ctx:all-srcs",
+        "//projects/aiservice/resourcesense/pkg/types/quota:all-srcs",
+        "//projects/aiservice/resourcesense/pkg/types/resource:all-srcs",
+        "//projects/aiservice/resourcesense/pkg/types/site:all-srcs",
+    ],
+    tags = ["automanaged"],
+    visibility = ["//visibility:public"],
+)

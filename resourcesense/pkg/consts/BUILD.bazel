@@ -1,0 +1,42 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "consts.go",
+        "types.go",
+    ],
+    importpath = "go.megvii-inc.com/brain/brainpp/projects/aiservice/resourcesense/pkg/consts",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//projects/aiservice/datahub/pkg/datahub-apiserver/api/v1:go_default_library",
+        "//projects/aiservice/pkg/ginlib:go_default_library",
+        "//projects/aiservice/pkg/korok:go_default_library",
+        "//projects/aiservice/pkg/kylin:go_default_library",
+        "//projects/aiservice/pkg/mgolib:go_default_library",
+        "//projects/aiservice/pkg/release:go_default_library",
+        "//projects/aiservice/pkg/types:go_default_library",
+        "//projects/aiservice/pkg/utils/nori:go_default_library",
+        "//projects/aiservice/resourcesense/pkg/types:go_default_library",
+        "//projects/aiservice/resourcesense/pkg/types/quota:go_default_library",
+        "//projects/aiservice/resourcesense/pkg/types/resource:go_default_library",
+        "@com_github_aws_aws_sdk_go//aws/session:go_default_library",
+        "@com_github_coocood_freecache//:go_default_library",
+        "@in_gopkg_yaml_v2//:go_default_library",
+        "@io_etcd_go_etcd_client_v3//:go_default_library",
+    ],
+)
+
+filegroup(
+    name = "package-srcs",
+    srcs = glob(["**"]),
+    tags = ["automanaged"],
+    visibility = ["//visibility:private"],
+)
+
+filegroup(
+    name = "all-srcs",
+    srcs = [":package-srcs"],
+    tags = ["automanaged"],
+    visibility = ["//visibility:public"],
+)

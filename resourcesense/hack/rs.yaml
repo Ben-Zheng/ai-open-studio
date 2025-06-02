@@ -1,0 +1,33 @@
+ginConf:
+  serverName: resourcesense-apiserver
+  serverAddr: "0.0.0.0:9032"
+  ginMode: debug
+  auth:
+    authServerAddr: http://auth-server.kubebrain
+    debug: true
+esConfig:
+  url: "10.68.0.152"
+  port: 9200
+  path: "log-collection/_search"
+  userName: "admin"
+  passWD: "CJ977zC5a6TOwP3O"
+mgoConf:
+  mongoURL: mongodb://localhost:27017/aisdata?replicaSet=ais  #该用户对该数据库可读可写，对于aisMgoDatabase所指定的数据库只可读
+  mongoDBName: aisresourcesense
+aisMgoDatabase:
+  dataHub:
+    mongoURL: ""
+    mongoDBName: aisdata
+  evalHub:
+    mongoURL: mongodb://localhost:27017/aisdata?replicaSet=ais  #评测任务mongoURI不同
+    mongoDBName: aiseval
+  autoLearn:
+    mongoURL: ""
+    mongoDBName: aisautolearn
+cleanerConf:
+  protection: 0
+  interval: 0
+  enabled: false
+logMonitorConf:
+  alertEnabled: false
+  interval: 0
