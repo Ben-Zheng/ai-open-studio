@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = ["healthz.go"],
+    importpath = "go.megvii-inc.com/brain/brainpp/projects/aiservice/workspace/pkg/api/v1/sla",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//projects/aiservice/workspace/pkg/types/ctx:go_default_library",
+        "@com_github_gin_gonic_gin//:go_default_library",
+    ],
+)
+
+filegroup(
+    name = "package-srcs",
+    srcs = glob(["**"]),
+    tags = ["automanaged"],
+    visibility = ["//visibility:private"],
+)
+
+filegroup(
+    name = "all-srcs",
+    srcs = [":package-srcs"],
+    tags = ["automanaged"],
+    visibility = ["//visibility:public"],
+)

@@ -1,0 +1,34 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "instance.go",
+        "workspace.go",
+    ],
+    importpath = "go.megvii-inc.com/brain/brainpp/projects/aiservice/workspace/pkg/types/workspace",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//projects/aiservice/pkg/ginlib:go_default_library",
+        "//projects/aiservice/workspace/pkg/consts:go_default_library",
+        "@com_github_apex_log//:go_default_library",
+        "@com_github_go_openapi_errors//:go_default_library",
+        "@org_mongodb_go_mongo_driver//bson:go_default_library",
+        "@org_mongodb_go_mongo_driver//bson/primitive:go_default_library",
+        "@org_mongodb_go_mongo_driver//mongo/options:go_default_library",
+    ],
+)
+
+filegroup(
+    name = "package-srcs",
+    srcs = glob(["**"]),
+    tags = ["automanaged"],
+    visibility = ["//visibility:private"],
+)
+
+filegroup(
+    name = "all-srcs",
+    srcs = [":package-srcs"],
+    tags = ["automanaged"],
+    visibility = ["//visibility:public"],
+)
