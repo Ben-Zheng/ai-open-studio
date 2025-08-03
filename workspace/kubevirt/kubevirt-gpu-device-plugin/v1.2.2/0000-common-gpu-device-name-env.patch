@@ -1,0 +1,139 @@
+diff --git a/Makefile b/Makefile
+index 0e46df7b..db25cdc0 100644
+--- a/Makefile
++++ b/Makefile
+@@ -24,8 +24,10 @@
+ # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+-DOCKER_REPO ?= "nvcr.io/nvidia/kubevirt-gpu-device-plugin"
+-DOCKER_TAG ?= v1.2.2
++# DOCKER_REPO ?= "nvcr.io/nvidia/kubevirt-gpu-device-plugin"
++# DOCKER_TAG ?= v1.2.2
++DOCKER_REPO="docker-registry-internal.i.brainpp.cn/ais/nvidia/kubevirt-gpu-device-plugin"
++DOCKER_TAG="v1.2.2-common"
+ 
+ build:
+ 	go build -o nvidia-kubevirt-gpu-device-plugin kubevirt-gpu-device-plugin/cmd
+@@ -36,6 +38,6 @@ test-coverage:
+ clean:
+ 	rm -rf nvidia-kubevirt-gpu-device-plugin && rm -rf coverage.out
+ build-image:
+-	docker build . -t $(DOCKER_REPO):$(DOCKER_TAG) 
++	docker build  --no-cache . -t $(DOCKER_REPO):$(DOCKER_TAG)
+ push-image: build-image
+ 	 docker push $(DOCKER_REPO):$(DOCKER_TAG)
+diff --git a/pkg/device_plugin/device_plugin.go b/pkg/device_plugin/device_plugin.go
+index a2fa9ea1..34558da0 100644
+--- a/pkg/device_plugin/device_plugin.go
++++ b/pkg/device_plugin/device_plugin.go
+@@ -43,21 +43,22 @@ import (
+ )
+ 
+ const (
+-	nvidiaVendorID = "10de"
++	nvidiaVendorID      = "10de"
++	CommonDeviceNameEnv = "COMMON_DEVICE_NAME"
+ )
+ 
+-//Structure to hold details about Nvidia GPU Device
++// Structure to hold details about Nvidia GPU Device
+ type NvidiaGpuDevice struct {
+ 	addr string // PCI address of device
+ }
+ 
+-//Key is iommu group id and value is a list of gpu devices part of the iommu group
++// Key is iommu group id and value is a list of gpu devices part of the iommu group
+ var iommuMap map[string][]NvidiaGpuDevice
+ 
+-//Keys are the distinct Nvidia GPU device ids present on system and value is the list of all iommu group ids which are of that device id
++// Keys are the distinct Nvidia GPU device ids present on system and value is the list of all iommu group ids which are of that device id
+ var deviceMap map[string][]string
+ 
+-//Key is vGPU Type and value is the list of Nvidia vGPUs of that type
++// Key is vGPU Type and value is the list of Nvidia vGPUs of that type
+ var vGpuMap map[string][]NvidiaGpuDevice
+ 
+ // Key is the Nvidia GPU id and value is the list of associated vGPU ids
+@@ -74,7 +75,6 @@ var readGpuIDForVgpu = readGpuIDForVgpuFunc
+ var startVgpuDevicePlugin = startVgpuDevicePluginFunc
+ var stop = make(chan struct{})
+ 
+-//
+ func InitiateDevicePlugin() {
+ 	//Identifies GPUs and represents it in appropriate structures
+ 	createIommuDeviceMap()
+@@ -84,7 +84,7 @@ func InitiateDevicePlugin() {
+ 	createDevicePlugins()
+ }
+ 
+-//Starts gpu pass through and vGPU device plugin
++// Starts gpu pass through and vGPU device plugin
+ func createDevicePlugins() {
+ 	var devicePlugins []*GenericDevicePlugin
+ 	var vGpuDevicePlugins []*GenericVGpuDevicePlugin
+@@ -160,7 +160,7 @@ func startVgpuDevicePluginFunc(dp *GenericVGpuDevicePlugin) error {
+ 	return dp.Start(stop)
+ }
+ 
+-//Discovers all Nvidia GPUs which are loaded with VFIO-PCI driver and creates corresponding maps
++// Discovers all Nvidia GPUs which are loaded with VFIO-PCI driver and creates corresponding maps
+ func createIommuDeviceMap() {
+ 	iommuMap = make(map[string][]NvidiaGpuDevice)
+ 	deviceMap = make(map[string][]string)
+@@ -214,7 +214,7 @@ func createIommuDeviceMap() {
+ 	})
+ }
+ 
+-//Discovers all Nvidia vGPUs configured on a node and creates corresponding maps
++// Discovers all Nvidia vGPUs configured on a node and creates corresponding maps
+ func createVgpuIDMap() {
+ 	vGpuMap = make(map[string][]NvidiaGpuDevice)
+ 	gpuVgpuMap = make(map[string][]string)
+@@ -248,7 +248,7 @@ func createVgpuIDMap() {
+ 	})
+ }
+ 
+-//Read a file to retrieve ID
++// Read a file to retrieve ID
+ func readIDFromFileFunc(basePath string, deviceAddress string, property string) (string, error) {
+ 	data, err := ioutil.ReadFile(filepath.Join(basePath, deviceAddress, property))
+ 	if err != nil {
+@@ -259,7 +259,7 @@ func readIDFromFileFunc(basePath string, deviceAddress string, property string)
+ 	return id, nil
+ }
+ 
+-//Read a file link
++// Read a file link
+ func readLinkFunc(basePath string, deviceAddress string, link string) (string, error) {
+ 	path, err := os.Readlink(filepath.Join(basePath, deviceAddress, link))
+ 	if err != nil {
+@@ -270,7 +270,7 @@ func readLinkFunc(basePath string, deviceAddress string, link string) (string, e
+ 	return file, nil
+ }
+ 
+-//Read vGPU type name from the corresponding file
++// Read vGPU type name from the corresponding file
+ func readVgpuIDFromFileFunc(basePath string, deviceAddress string, property string) (string, error) {
+ 	reg, _ := regexp.Compile("\\s+")
+ 	data, err := ioutil.ReadFile(filepath.Join(basePath, deviceAddress, property))
+@@ -283,7 +283,7 @@ func readVgpuIDFromFileFunc(basePath string, deviceAddress string, property stri
+ 	return str, nil
+ }
+ 
+-//Read GPU id for a specific vGPU
++// Read GPU id for a specific vGPU
+ func readGpuIDForVgpuFunc(basePath string, deviceAddress string) (string, error) {
+ 	path, err := os.Readlink(filepath.Join(basePath, deviceAddress))
+ 	if err != nil {
+@@ -351,6 +351,10 @@ func getDeviceName(deviceID string) string {
+ 		break
+ 	}
+ 
++	if os.Getenv(CommonDeviceNameEnv) != "" {
++		return os.Getenv(CommonDeviceNameEnv)
++	}
++
+ 	if err := scanner.Err(); err != nil {
+ 		log.Printf("Error reading pci ids file %s", err)
+ 	}

@@ -1,0 +1,45 @@
+diff --git a/Makefile b/Makefile
+index fa76909..a269b02 100644
+--- a/Makefile
++++ b/Makefile
+@@ -27,6 +27,8 @@
+
+ DOCKER_REPO="quay.io/nvidia/vfio-device-plugin"
+ DOCKER_TAG="devel"
++DOCKER_REPO="docker-registry-internal.i.brainpp.cn/ais/nvidia/kubevirt-gpu-device-plugin"
++DOCKER_TAG="v1.1.1-common"
+
+ build:
+        go build -o nvidia-kubevirt-gpu-device-plugin kubevirt-gpu-device-plugin/cmd
+@@ -37,6 +39,6 @@ test-coverage:
+ clean:
+        rm -rf nvidia-kubevirt-gpu-device-plugin && rm -rf coverage.out
+ build-image:
+-       docker build . -t $(DOCKER_REPO):$(DOCKER_TAG)
++       docker build  --no-cache . -t $(DOCKER_REPO):$(DOCKER_TAG)
+ push-image: build-image
+         docker push $(DOCKER_REPO):$(DOCKER_TAG)
+diff --git a/pkg/device_plugin/device_plugin.go b/pkg/device_plugin/device_plugin.go
+index bf41986..9356052 100644
+--- a/pkg/device_plugin/device_plugin.go
++++ b/pkg/device_plugin/device_plugin.go
+@@ -69,6 +69,8 @@ var readGpuIDForVgpu = readGpuIDForVgpuFunc
+ var startVgpuDevicePlugin = startVgpuDevicePluginFunc
+ var stop = make(chan struct{})
+
++const CommonDeviceNameEnv = "COMMON_DEVICE_NAME"
++
+ //
+ func InitiateDevicePlugin() {
+        //Identifies GPUs and represents it in appropriate structures
+@@ -326,6 +328,10 @@ func getDeviceName(deviceID string) string {
+                }
+        }
+
++       if os.Getenv(CommonDeviceNameEnv) != "" {
++               return os.Getenv(CommonDeviceNameEnv)
++       }
++
+        if err := scanner.Err(); err != nil {
+                log.Printf("Error reading pci ids file %s", err)
+        }

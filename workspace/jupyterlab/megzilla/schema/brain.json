@@ -1,0 +1,12 @@
+{
+  "title": "aiservice workspace",
+  "type": "object",
+  "properties": {
+    "exitTimeout": {
+      "type": "integer",
+      "title": "最长无操作时间",
+      "description": "超过最长无操作时间，将会退出",
+      "default": 600
+    }
+  }
+}

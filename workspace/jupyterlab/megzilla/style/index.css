@@ -1,0 +1,112 @@
+.jp-ModelHubBrowser {
+  background-color: var(--jp-layout-color1);
+  height: 100%;
+}
+
+.jp-ModelHubErrorPanel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--jp-layout-color2);
+}
+
+.jp-ModelHubErrorImage {
+  background-size: 100%;
+  width: 200px;
+  height: 165px;
+  /*background-image: url(octocat_error.png);*/
+}
+
+.jp-ModelHubErrorText {
+  font-size: var(--jp-ui-font-size3);
+  color: var(--jp-ui-font-color1);
+  text-align: center;
+  padding: 12px;
+}
+
+.jp-ModelHubBrowser .jp-MyBinderButton {
+  /*background-image: url(binder.svg);*/
+}
+
+.jp-ModelHubBrowser .jp-MyBinderButton-disabled {
+  opacity: 0.3;
+}
+
+#setting-editor .jp-PluginList-icon.jp-GitHub-icon {
+  background-size: 85%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.jp-modelList {
+  margin-left: -30px;
+  margin-top: -10px;
+}
+
+.jp-modelList header {
+  border-bottom: var(--jp-border-width) solid var(--jp-border-color2);
+  flex: 0 0 auto;
+  font-size: var(--jp-ui-font-size0);
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding: 8px 12px;
+  text-transform: uppercase;
+  margin-top: 10px;
+  margin-left: 30px;
+}
+
+.jp-modelList li {
+  padding: 4px 12px 4px 4px;
+  color: var(--jp-ui-font-color1);
+  font-size: var(--jp-ui-font-size1);
+  font-weight: 400;
+  display: flex;
+  width: 100%;
+}
+
+.jp-modelList li:hover{
+  background: var(--jp-layout-color2);
+}
+
+.jp-modelList a {
+  position: relative;
+  top: -2px;
+  flex: 1 1 auto;
+  margin-right: 4px;
+  padding-left: 4px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  border-radius: 2px;
+}
+
+.jp-modelList i {
+  margin-right: 10px;
+}
+
+.jp-statusbar span {
+  color: var(--jp-ui-font-color1);
+  font-family: var(--jp-ui-font-family);
+  font-size: var(--jp-ui-font-size1);
+  line-height: 24px;
+}
+
+.jp-Dialog-body {
+  white-space: pre-line;
+  line-height: 24px;
+}
+
+.megengine-Widget {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  align-items: stretch;
+  scroll-behavior: smooth;
+}

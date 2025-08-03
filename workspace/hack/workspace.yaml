@@ -1,0 +1,11 @@
+ginConf:
+  serverName: workspace-apiserver
+  serverAddr: "0.0.0.0:9032"
+  ginMode: debug
+  auth:
+    authServerAddr: http://auth-server.kubebrain
+    debug: true
+mgoConf:
+  mongoURL: mongodb://localhost:27017/aisdata?replicaSet=ais  #该用户对该数据库可读可写，对于aisMgoDatabase所指定的数据库只可读
+  mongoDBName: aispublicservice
+wsService: http://

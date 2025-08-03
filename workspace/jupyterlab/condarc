@@ -1,0 +1,3 @@
+channels:
+  - http://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge/
+show_channel_urls: true

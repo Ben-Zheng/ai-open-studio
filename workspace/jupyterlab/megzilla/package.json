@@ -1,0 +1,73 @@
+{
+  "name": "megzilla",
+  "version": "0.3.4",
+  "description": "旷视科技 JupyterLab 全家桶",
+  "keywords": [
+    "jupyter",
+    "jupyterlab",
+    "jupyterlab-extension"
+  ],
+  "homepage": "https://github.com/yangyu7/learngit",
+  "bugs": {
+    "url": "https://github.com/yangyu7/learngit/issues"
+  },
+  "license": "BSD-3-Clause",
+  "author": "aiservice",
+  "files": [
+    "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
+    "style/**/*.{css,eot,gif,html,jpg,json,png,svg,woff2,ttf}",
+    "schema/**/*.json"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "style": "style/index.css",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yangyu7/learngit.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf lib tsconfig.tsbuildinfo",
+    "prepare": "jlpm run clean && jlpm run build",
+    "watch": "tsc -w"
+  },
+  "dependencies": {
+    "@jupyterlab/application": "^2.0.0",
+    "@jupyterlab/apputils": "^2.0.0",
+    "@jupyterlab/coreutils": "^4.0.0",
+    "@jupyterlab/docmanager": "^2.0.0",
+    "@jupyterlab/docregistry": "^2.0.0",
+    "@jupyterlab/filebrowser": "^2.0.0",
+    "@jupyterlab/extensionmanager": "^2.0.0",
+    "@jupyterlab/settingregistry": "^2.0.0",
+    "@jupyterlab/mainmenu": "^2.0.0",
+    "@jupyterlab/notebook": "^2.0.0",
+    "@jupyterlab/statusbar": "^2.0.0",
+    "@lumino/algorithm": "^1.2.3",
+    "@lumino/messaging": "^1.3.3",
+    "@lumino/signaling": "^1.3.5",
+    "@lumino/widgets": "^1.11.1",
+    "base64-js": "^1.3.1",
+    "bufferutil": "^4.0.1",
+    "utf-8-validate": "^5.0.2"
+  },
+  "devDependencies": {
+    "@types/base64-js": "^1.2.5",
+    "@types/text-encoding": "^0.0.35",
+    "husky": "^2.4.1",
+    "lint-staged": "^8.2.1",
+    "prettier": "^1.18.2",
+    "rimraf": "^2.6.3",
+    "tslint": "^5.18.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-plugin-prettier": "^2.0.1",
+    "typescript": "^3.7.3"
+  },
+  "sideEffects": [
+    "style/*.css"
+  ],
+  "jupyterlab": {
+    "extension": true,
+    "schemaDir": "schema"
+  }
+}
